@@ -9,32 +9,81 @@ import androidx.compose.ui.graphics.Color
 
 private val DarkColorScheme = darkColorScheme(
     primary = TealGreenDark,
-    secondary = BabyBlue,
-    tertiary = LightSoftGreen,
     onPrimary = Color.White,
+    primaryContainer = TealGreen,
+    onPrimaryContainer = Color.White,
+
+    secondary = BabyBlue,
     onSecondary = Color.White,
+    secondaryContainer = BabyBlue.copy(alpha = 0.7f),
+    onSecondaryContainer = DarkGrey,
+
+    tertiary = LightGreen,
+    onTertiary = Color.White,
+    tertiaryContainer = LightGreen.copy(alpha = 0.7f),
+    onTertiaryContainer = DarkGrey,
+
     background = DarkGrey,
+    onBackground = Color.White,
     surface = TealGreenDark,
     onSurface = Color.White,
+    surfaceVariant = SurfaceVariant,
+    onSurfaceVariant = DarkGrey,
+
+    error = ErrorRed,
+    onError = Color.White,
+    errorContainer = ErrorContainer,
+    onErrorContainer = DarkGrey,
+
+    outline = Outline,
+    outlineVariant = Outline.copy(alpha = 0.6f),
+    scrim = Color.Black,
+    inverseSurface = LightGrey,
+    inverseOnSurface = TealGreenDark,
+    inversePrimary = TealGreen,
+    surfaceTint = TealGreen
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = TealGreen,
-    secondary = BabyBlue,
-    tertiary = LightSoftGreen,
-    background = AppBackground,
-    surface = Color.White,
     onPrimary = Color.White,
+    primaryContainer = LightGreen,
+    onPrimaryContainer = TealGreenDark,
+
+    secondary = BabyBlue,
     onSecondary = Color.White,
+    secondaryContainer = BabyBlue.copy(alpha = 0.9f),
+    onSecondaryContainer = DarkGrey,
+
+    tertiary = LightGreen,
     onTertiary = Color.White,
-//    onBackground = Color(0xFF1C1B1F),
-    onSurface = AppPrimaryText,
+    tertiaryContainer = LightGreen.copy(alpha = 0.9f),
+    onTertiaryContainer = DarkGrey,
+
+    background = LightGrey,
+    onBackground = DarkGrey,
+    surface = Color.White,
+    onSurface = DarkGrey,
+    surfaceVariant = SurfaceVariant,
+    onSurfaceVariant = DarkGrey,
+
+    error = ErrorRed,
+    onError = Color.White,
+    errorContainer = ErrorContainer,
+    onErrorContainer = DarkGrey,
+
+    outline = Outline,
+    outlineVariant = Outline.copy(alpha = 0.8f),
+    scrim = Color.Black,
+    inverseSurface = DarkGrey,
+    inverseOnSurface = Color.White,
+    inversePrimary = TealGreenDark,
+    surfaceTint = TealGreen
 )
 
 @Composable
 fun JameyaTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     content: @Composable () -> Unit
 ) {
     val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme

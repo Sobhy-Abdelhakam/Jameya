@@ -18,13 +18,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import dev.sobhy.jameya.navigation.NavigationItem
+import dev.sobhy.jameya.presentation.login.sections.ConfirmPhoneNumberDialog
 import dev.sobhy.jameya.presentation.login.sections.LoginTopSection
 import dev.sobhy.jameya.presentation.login.sections.PhoneNumberSection
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavHostController) {
     var phoneNumber by remember {
         mutableStateOf("")
+    }
+    var showConfirmDialog by remember {
+        mutableStateOf(false)
     }
     Scaffold { paddingValue ->
         Column(
@@ -43,9 +49,18 @@ fun LoginScreen() {
                 onPhoneNumberChange = { phoneNumber = it }
             )
             Spacer(modifier = Modifier.weight(1f))
-            Button(onClick = { /*TODO*/ }, modifier = Modifier.fillMaxWidth()) {
+            Button(onClick = { showConfirmDialog = true }, modifier = Modifier.fillMaxWidth()) {
                 Text(text = "Send OTP", modifier = Modifier.padding(4.dp))
             }
+            ConfirmPhoneNumberDialog(
+                showDialog = showConfirmDialog,
+                number = phoneNumber,
+                dismiss = { showConfirmDialog = false },
+                confirm = {
+                    showConfirmDialog = false
+                    navController.navigate(NavigationItem.Home.route)
+                }
+            )
         }
     }
 }

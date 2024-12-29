@@ -9,7 +9,7 @@ val BabyBlue = Color(0xFF34B7F1)
 val LightGrey = Color(0xFFECE5DD)
 val DarkGrey = Color(0xFF424242)
 
-val LightSoftGreen = Color(0xFFDCF8C6)
-val AppBackground = LightGrey
-val AppPrimaryText = DarkGrey
-val AppSecondaryText = BabyBlue
+val ErrorRed = Color(0xFFB00020) // Placeholder for error states
+val ErrorContainer = Color(0xFFF9DEDC) // Error container
+val Outline = Color(0xFFB0BEC5)
+val SurfaceVariant = Color(0xFFD7CCC8)
