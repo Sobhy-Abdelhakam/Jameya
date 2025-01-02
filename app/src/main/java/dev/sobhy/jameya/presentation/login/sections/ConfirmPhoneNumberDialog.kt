@@ -14,23 +14,49 @@ fun ConfirmPhoneNumberDialog(
     confirm: () -> Unit,
 ) {
     if (!showDialog) return
+    val titleText =
+        if (number.isNotEmpty()) "Is this the correct number?" else "Please enter your phone number."
+    val dismissText = if (number.isNotEmpty()) "Edit" else "Ok"
+
     AlertDialog(
         onDismissRequest = dismiss,
-        confirmButton = {
-            TextButton(onClick = confirm) {
-                Text(text = "Yes")
-            }
-        },
-        title = {
-            Text(text = "Is this the correct number?", style = MaterialTheme.typography.titleMedium)
-        },
-        text = {
-            Text(text = "+20 $number", style = MaterialTheme.typography.headlineSmall)
-        },
-        dismissButton = {
-            TextButton(onClick = dismiss) {
-                Text(text = "Edit")
-            }
-        },
+        title = { DialogTitle(text = titleText) },
+        text = { DialogContent(number = number) },
+        confirmButton = { DialogConfirmButton(number = number, onConfirm = confirm) },
+        dismissButton = { DialogDismissButton(text = dismissText, onDismiss = dismiss) }
     )
+}
+
+@Composable
+private fun DialogTitle(text: String) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.titleMedium
+    )
+}
+
+@Composable
+private fun DialogContent(number: String) {
+    if (number.isNotEmpty()) {
+        Text(
+            text = "+20 $number",
+            style = MaterialTheme.typography.headlineSmall
+        )
+    }
+}
+
+@Composable
+private fun DialogConfirmButton(number: String, onConfirm: () -> Unit) {
+    if (number.isNotEmpty()) {
+        TextButton(onClick = onConfirm) {
+            Text(text = "Yes")
+        }
+    }
+}
+
+@Composable
+private fun DialogDismissButton(text: String, onDismiss: () -> Unit) {
+    TextButton(onClick = onDismiss) {
+        Text(text = text)
+    }
 }
