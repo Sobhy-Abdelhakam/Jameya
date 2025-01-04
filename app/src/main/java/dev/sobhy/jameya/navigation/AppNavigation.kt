@@ -5,7 +5,8 @@ enum class Screen {
     VERIFY_PHONE,
     PROFILE,
     HOME,
-    CREATE
+    CREATE,
+    DETAILS
 }
 sealed class NavigationItem(val route: String){
     data object Login: NavigationItem(Screen.LOGIN.name)
@@ -13,4 +14,5 @@ sealed class NavigationItem(val route: String){
     data object Profile: NavigationItem(Screen.PROFILE.name)
     data object Home: NavigationItem(Screen.HOME.name)
     data object Create: NavigationItem(Screen.CREATE.name)
+    data object Details: NavigationItem(Screen.DETAILS.name)
 }

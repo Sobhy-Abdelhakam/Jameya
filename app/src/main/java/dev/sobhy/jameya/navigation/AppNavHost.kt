@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import dev.sobhy.jameya.presentation.addjameya.AddJameyaScreen
+import dev.sobhy.jameya.presentation.details.JameyaDetailsScreen
 import dev.sobhy.jameya.presentation.home.HomeScreen
 import dev.sobhy.jameya.presentation.login.LoginScreen
 import dev.sobhy.jameya.presentation.login.verify.NumberVerificationScreen
@@ -29,6 +30,9 @@ fun AppNavHost(
         }
         composable(NavigationItem.Create.route){
             AddJameyaScreen(navController = navController)
+        }
+        composable(NavigationItem.Details.route){
+            JameyaDetailsScreen(navController = navController)
         }
     }
 }

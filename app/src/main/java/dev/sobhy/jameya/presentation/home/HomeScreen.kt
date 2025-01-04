@@ -1,6 +1,7 @@
 package dev.sobhy.jameya.presentation.home
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -96,7 +97,9 @@ fun HomeScreen(navController: NavController) {
                     trailingContent = {
                         Text(text = "12 May - 12 June")
                     },
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier.padding(8.dp).clickable {
+                        navController.navigate(NavigationItem.Details.route)
+                    }
                 )
             }
         }
