@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import dev.sobhy.jameya.presentation.home.HomeScreen
 import dev.sobhy.jameya.presentation.login.LoginScreen
+import dev.sobhy.jameya.presentation.login.verify.NumberVerificationScreen
 
 @Composable
 fun AppNavHost(
@@ -17,6 +18,10 @@ fun AppNavHost(
     NavHost(navController = navController, startDestination = startDestination) {
         composable(NavigationItem.Login.route) {
             LoginScreen(navController)
+        }
+        composable(NavigationItem.VerifyPhone.route+"/{phoneNumber}"){
+            val number = it.arguments?.getString("phoneNumber") ?: ""
+            NumberVerificationScreen(navController = navController, phoneNumber = number)
         }
         composable(NavigationItem.Home.route){
             HomeScreen()

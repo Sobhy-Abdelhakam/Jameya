@@ -46,6 +46,7 @@ fun PhoneNumberSection(
                     text = "Phone Number"
                 )
             },
+            singleLine = true,
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent

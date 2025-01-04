@@ -11,10 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LoginTopSection(modifier: Modifier = Modifier) {
+fun LoginTopSection(
+    title: String,
+    text: String,
+    modifier: Modifier = Modifier
+) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
-        Text(text = "Enter your phone number", style = MaterialTheme.typography.headlineMedium)
+        Text(text = title, style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(12.dp))
-        Text(text = "Jameya will need to verify your phone number")
+        Text(text = text, style = MaterialTheme.typography.bodyMedium)
     }
 }

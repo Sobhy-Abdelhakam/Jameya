@@ -23,10 +23,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import dev.sobhy.jameya.navigation.NavigationItem
+import dev.sobhy.jameya.navigation.Screen
 import dev.sobhy.jameya.presentation.login.sections.ConfirmPhoneNumberDialog
 import dev.sobhy.jameya.presentation.login.sections.LoginTopSection
 import dev.sobhy.jameya.presentation.login.sections.PhoneNumberSection
-import java.util.concurrent.TimeUnit
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
@@ -36,10 +37,6 @@ fun LoginScreen(navController: NavHostController) {
     var showConfirmDialog by remember {
         mutableStateOf(false)
     }
-    var otp by remember {
-        mutableStateOf("")
-    }
-    val context = LocalContext.current as Activity
     Scaffold { paddingValue ->
         Column(
             modifier = Modifier
@@ -50,7 +47,10 @@ fun LoginScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.SpaceAround
         ) {
             Spacer(modifier = Modifier.weight(1f))
-            LoginTopSection()
+            LoginTopSection(
+                title = "Enter your phone number",
+                text = "We will send you an OTP to verify your number"
+            )
             Spacer(modifier = Modifier.height(32.dp))
             PhoneNumberSection(
                 phoneNumber = phoneNumber,
@@ -60,13 +60,13 @@ fun LoginScreen(navController: NavHostController) {
             Button(onClick = { showConfirmDialog = true }, modifier = Modifier.fillMaxWidth()) {
                 Text(text = "Send OTP", modifier = Modifier.padding(4.dp))
             }
-            Text(text = "OTP $otp", style = MaterialTheme.typography.titleMedium)
             ConfirmPhoneNumberDialog(
                 showDialog = showConfirmDialog,
                 number = phoneNumber,
                 dismiss = { showConfirmDialog = false },
                 confirm = {
                     showConfirmDialog = false
+                    navController.navigate(NavigationItem.VerifyPhone.route + "/$phoneNumber")
                 }
             )
         }
