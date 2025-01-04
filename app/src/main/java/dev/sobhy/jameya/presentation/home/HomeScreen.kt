@@ -8,6 +8,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,37 +38,32 @@ fun HomeScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = "Profile"
+                        )
+                    }
+                },
                 title = {
-                    Text(text = "Jameya", style = MaterialTheme.typography.headlineMedium)
+                    Text(text = "Hi, Sobhy", style = MaterialTheme.typography.headlineSmall)
                 },
                 actions = {
-                    BadgedBox(badge = { Badge { Text("2") } }) {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(
-                                imageVector = Icons.Default.Notifications,
-                                contentDescription = null
-                            )
-                        }
+                    BadgedBox(badge = { Badge { Text("2") } }, modifier = Modifier.padding(16.dp)) {
+                        Icon(
+                            imageVector = Icons.Default.Notifications,
+                            contentDescription = "Notification",
+                            modifier = Modifier.size(24.dp)
+                        )
                     }
+                    IconButton(onClick = { /*TODO*/ }, modifier = Modifier.padding(8.dp)) {
+                        Icon(imageVector = Icons.Default.Settings, contentDescription = "Setting")
+                    }
+
                 },
                 scrollBehavior = scrollBehavior
             )
-//            Row(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(start = 16.dp, end = 16.dp, top = 50.dp),
-//                horizontalArrangement = Arrangement.SpaceBetween,
-//                verticalAlignment = Alignment.CenterVertically
-//            ) {
-//                Text(
-//                    text = "Hi, Sobhy",
-//                    style = MaterialTheme.typography.headlineMedium
-//                )
-//                IconButton(onClick = { /*TODO*/ }) {
-//                    Icon(imageVector = Icons.Default.Notifications, contentDescription = null)
-//                }
-//
-//            }
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
@@ -97,9 +94,11 @@ fun HomeScreen(navController: NavController) {
                     trailingContent = {
                         Text(text = "12 May - 12 June")
                     },
-                    modifier = Modifier.padding(8.dp).clickable {
-                        navController.navigate(NavigationItem.Details.route)
-                    }
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .clickable {
+                            navController.navigate(NavigationItem.Details.route)
+                        }
                 )
             }
         }
