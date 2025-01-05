@@ -10,6 +10,7 @@ import dev.sobhy.jameya.presentation.details.JameyaDetailsScreen
 import dev.sobhy.jameya.presentation.home.HomeScreen
 import dev.sobhy.jameya.presentation.login.LoginScreen
 import dev.sobhy.jameya.presentation.login.verify.NumberVerificationScreen
+import dev.sobhy.jameya.presentation.profile.ProfileScreen
 
 @Composable
 fun AppNavHost(
@@ -24,6 +25,9 @@ fun AppNavHost(
         composable(NavigationItem.VerifyPhone.route+"/{phoneNumber}"){
             val number = it.arguments?.getString("phoneNumber") ?: ""
             NumberVerificationScreen(navController = navController, phoneNumber = number)
+        }
+        composable(NavigationItem.Profile.route){
+            ProfileScreen()
         }
         composable(NavigationItem.Home.route){
             HomeScreen(navController = navController)

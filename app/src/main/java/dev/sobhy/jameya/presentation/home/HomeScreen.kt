@@ -39,7 +39,9 @@ fun HomeScreen(navController: NavController) {
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = {
+                        navController.navigate(NavigationItem.Profile.route)
+                    }) {
                         Icon(
                             imageVector = Icons.Default.Person,
                             contentDescription = "Profile"
