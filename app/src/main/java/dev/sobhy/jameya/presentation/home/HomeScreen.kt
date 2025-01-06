@@ -2,13 +2,13 @@ package dev.sobhy.jameya.presentation.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
@@ -26,10 +26,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import dev.sobhy.jameya.R
 import dev.sobhy.jameya.navigation.NavigationItem
+import dev.sobhy.jameya.ui.compnents.ProfileImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,14 +44,19 @@ fun HomeScreen(navController: NavController) {
                     IconButton(onClick = {
                         navController.navigate(NavigationItem.Profile.route)
                     }) {
-                        Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = "Profile"
+                        ProfileImage(
+                            imageUrl = "https://image.tmdb.org/t/p/original/9hGF3WUkBf7cSjMg0cdMDHJkByd.jpg",
+                            modifier = Modifier.fillMaxSize()
                         )
                     }
                 },
                 title = {
-                    Text(text = "Hi, Sobhy", style = MaterialTheme.typography.headlineSmall)
+                    Text(
+                        text = "Hi, Sobhy Abdel Hakam Sediq",
+                        style = MaterialTheme.typography.headlineSmall,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 },
                 actions = {
                     BadgedBox(badge = { Badge { Text("2") } }, modifier = Modifier.padding(16.dp)) {

@@ -1,7 +1,5 @@
 package dev.sobhy.jameya.presentation.profile.components
 
-import android.net.Uri
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,28 +19,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import dev.sobhy.jameya.R
+import dev.sobhy.jameya.ui.compnents.ProfileImage
 
 @Composable
 fun ProfileImageWithEditIcon(
-    imageUri: Uri?,
+    imageUrl: String?,
     editIconClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(modifier = Modifier.size(150.dp)) {
-        Image(
-            painter = painterResource(id = R.drawable.profile),
-            contentDescription = "Profile image",
-            modifier = modifier
-                .fillMaxSize()
-                .clip(CircleShape)
-                .border(
-                    width = 1.dp,
-                    color = Color.Gray,
-                    shape = CircleShape
-                ),
-            contentScale = ContentScale.Crop
-        )
+        ProfileImage(imageUrl = imageUrl, modifier = Modifier.fillMaxSize())
         IconButton(
             onClick = editIconClick,
             colors = IconButtonDefaults.filledIconButtonColors(),
