@@ -1,4 +1,5 @@
-
+import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -6,6 +7,10 @@ plugins {
     alias(libs.plugins.compose.compiler)
     kotlin("plugin.serialization") version "2.1.0"
 }
+
+val localProperties = rootProject.file("local.properties")
+val properties = Properties()
+properties.load(FileInputStream(localProperties))
 
 android {
     namespace = "dev.sobhy.jameya"
@@ -22,6 +27,9 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("String", "SUPABASE_URL", properties.getProperty("SUPABASE_URL"))
+        buildConfigField("String", "SUPABASE_KEY", properties.getProperty("SUPABASE_KEY"))
     }
 
     buildTypes {
@@ -42,6 +50,7 @@ android {
     }
     buildFeatures {
         compose = true
+        android.buildFeatures.buildConfig = true
     }
 
     packaging {
