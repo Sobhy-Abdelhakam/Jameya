@@ -8,18 +8,16 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun ConfirmPhoneNumberDialog(
-    showDialog: Boolean,
     number: String,
     dismiss: () -> Unit,
     confirm: () -> Unit,
 ) {
-    if (!showDialog) return
     val titleText =
         if (number.isNotEmpty()) "Is this the correct number?" else "Please enter your phone number."
     val dismissText = if (number.isNotEmpty()) "Edit" else "Ok"
 
     AlertDialog(
-        onDismissRequest = dismiss,
+        onDismissRequest = {},
         title = { DialogTitle(text = titleText) },
         text = { DialogContent(number = number) },
         confirmButton = { DialogConfirmButton(number = number, onConfirm = confirm) },
