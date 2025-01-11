@@ -37,24 +37,18 @@ class LoginViewModel @Inject constructor(
         private set
     var otp: String by mutableStateOf("")
         private set
-    var showConfirmNumberDialog: Boolean by mutableStateOf(false)
-        private set
+
     private fun updatePhoneNumber(newNumber: String) {
-        phoneNumber = newNumber
         _uiState.update { it.copy(phoneNumber = newNumber) }
     }
     private fun updateOtp(newOtp: String) {
-        otp = newOtp
         _uiState.update { it.copy(otp = newOtp) }
-    }
-    fun updateShowConfirmNumberDialog(newValue: Boolean) {
-        showConfirmNumberDialog = newValue
     }
 
     private fun sendOtp() {
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            val result = sendOtpUseCase("+20$phoneNumber")
+            val result = sendOtpUseCase("+20${uiState.value.phoneNumber}")
             _uiState.update {
                 if (result.isSuccess) {
                     it.copy(isLoading = false, error = null, currentContent = ScreenContent.Otp)
@@ -67,7 +61,7 @@ class LoginViewModel @Inject constructor(
     private fun verifyOtp() {
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            val result = verifyOtpUseCase("+20$phoneNumber", otp)
+            val result = verifyOtpUseCase("+20${uiState.value.phoneNumber}", uiState.value.otp)
             _uiState.update {
                 if (result.isSuccess) {
                     it.copy(isSuccess = true, isLoading = false, error = null)

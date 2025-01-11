@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import dev.sobhy.jameya.presentation.login.verify.OTPTextField
+import dev.sobhy.jameya.presentation.login.components.OTPTextField
 
 @Composable
 fun OtpContent(
@@ -24,10 +24,6 @@ fun OtpContent(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LoginTopSection(
-            title = "Verify you number",
-            text = "You've tried to sign in with +201212121321.\n" +
-                    "Enter the OTP sent to your number")
         TextButton(onClick = onWrongNumber) {
             Text("Wrong number?")
         }

@@ -1,4 +1,4 @@
-package dev.sobhy.jameya.presentation.login.verify
+package dev.sobhy.jameya.presentation.login.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -40,7 +40,7 @@ fun OTPTextField(
                 onDone()
             }
         ),
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         decorationBox = {
             Row(horizontalArrangement = Arrangement.Center) {
                 repeat(6) { index ->

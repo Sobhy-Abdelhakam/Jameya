@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import dev.sobhy.jameya.presentation.login.components.PhoneNumberWithCounterCodeTextField
 
 @Composable
 fun PhoneContent(
@@ -21,8 +22,7 @@ fun PhoneContent(
         verticalArrangement = Arrangement.spacedBy(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LoginTopSection(title = "Enter you phone number", text = "We will send you an OTP to verify your number")
-        PhoneNumberSection(phoneNumber =phoneNumber, onPhoneNumberChange =onPhoneNumberChange)
+        PhoneNumberWithCounterCodeTextField(phoneNumber =phoneNumber, onPhoneNumberChange =onPhoneNumberChange)
         Button(onClick = onConfirm, modifier = Modifier.fillMaxWidth()) {
             Text(text = "Send OTP", modifier = Modifier.padding(4.dp))
         }

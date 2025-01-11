@@ -17,6 +17,7 @@ class AuthRepositoryImpl @Inject constructor(
 //                this.phone = phoneNumber
 //            }
             delay(2000)
+            Exception("Failed to send OTP")
         }.onSuccess {
             return Result.success(Unit)
         }.onFailure {

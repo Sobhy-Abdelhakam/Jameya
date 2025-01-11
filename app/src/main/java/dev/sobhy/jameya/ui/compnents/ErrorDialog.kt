@@ -7,13 +7,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun ErrorDialog(message: String) {
+fun ErrorDialog(message: String, dismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = {},
         title = { Text(text = "Error") },
         text = { Text(text = message) },
         confirmButton = {
-            Button(onClick = {}) {
+            Button(onClick = dismiss) {
                 Text(text = "OK")
             }
         }

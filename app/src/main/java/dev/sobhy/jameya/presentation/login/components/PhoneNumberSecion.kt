@@ -1,4 +1,4 @@
-package dev.sobhy.jameya.presentation.login.sections
+package dev.sobhy.jameya.presentation.login.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -16,7 +16,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun PhoneNumberSection(
+fun PhoneNumberWithCounterCodeTextField(
     phoneNumber: String,
     onPhoneNumberChange: (String) -> Unit,
     modifier: Modifier = Modifier
