@@ -5,7 +5,6 @@ import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.OtpType
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.OTP
-import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -13,11 +12,9 @@ class AuthRepositoryImpl @Inject constructor(
 ): AuthRepository {
     override suspend fun sendOtp(phoneNumber: String): Result<Unit> {
         kotlin.runCatching {
-//            supabase.auth.signInWith(OTP){
-//                this.phone = phoneNumber
-//            }
-            delay(2000)
-            Exception("Failed to send OTP")
+            supabase.auth.signInWith(OTP){
+                this.phone = phoneNumber
+            }
         }.onSuccess {
             return Result.success(Unit)
         }.onFailure {
@@ -28,12 +25,11 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun verifyOtp(phoneNumber: String, otp: String): Result<Unit> {
         kotlin.runCatching {
-//            supabase.auth.verifyPhoneOtp(
-//                type = OtpType.Phone.SMS,
-//                phone = phoneNumber,
-//                token = otp
-//            )
-            delay(2000)
+            supabase.auth.verifyPhoneOtp(
+                type = OtpType.Phone.SMS,
+                phone = phoneNumber,
+                token = otp
+            )
         }.onSuccess {
             return Result.success(Unit)
         }.onFailure {
