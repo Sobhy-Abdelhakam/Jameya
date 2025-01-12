@@ -27,6 +27,11 @@ class AuthRepositoryImpl @Inject constructor(
                 phone = phoneNumber,
                 token = otp
             )
-        }.mapCatching { }
+            val userId = supabase.auth.currentUserOrNull()?.id ?: throw Exception("User ID not found")
+            dataStoreManager.setUserId(userId)
+            Result.success(Unit)
+        }.getOrElse {
+            Result.failure(it)
+        }
     }
 }

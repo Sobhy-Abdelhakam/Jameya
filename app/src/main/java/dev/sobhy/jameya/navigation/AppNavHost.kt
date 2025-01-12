@@ -15,7 +15,6 @@ import dev.sobhy.jameya.presentation.profile.ProfileScreen
 fun AppNavHost(
     navController: NavHostController,
     startDestination: String = NavigationItem.Login.route,
-    modifier: Modifier = Modifier,
 ) {
     NavHost(navController = navController, startDestination = startDestination) {
         composable(NavigationItem.Login.route) {
