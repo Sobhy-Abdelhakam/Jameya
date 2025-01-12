@@ -1,11 +1,14 @@
 package dev.sobhy.jameya.di
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dev.sobhy.jameya.BuildConfig
+import dev.sobhy.jameya.data.datastore.DataStoreManager
 import dev.sobhy.jameya.data.login.AuthRepositoryImpl
 import dev.sobhy.jameya.domain.repository.AuthRepository
 import dev.sobhy.jameya.domain.usecase.SendOtpUseCase
@@ -33,8 +36,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepo(supabaseClient: SupabaseClient): AuthRepository{
-        return AuthRepositoryImpl(supabaseClient)
+    fun provideDataStoreManager(@ApplicationContext context: Context): DataStoreManager {
+        return DataStoreManager(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthRepo(supabaseClient: SupabaseClient, dataStoreManager: DataStoreManager): AuthRepository{
+        return AuthRepositoryImpl(supabaseClient, dataStoreManager)
     }
     @Provides
     @Singleton
