@@ -96,6 +96,8 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     // dataStore
     implementation(libs.androidx.datastore.preferences)
+    // APIs for SplashScreen, including compatibility helpers on devices prior Android 12
+    implementation(libs.androidx.core.splashscreen)
 }
 // Allow references to generated code
 kapt {

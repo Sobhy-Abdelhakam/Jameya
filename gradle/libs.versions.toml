@@ -2,6 +2,7 @@
 agp = "8.8.0"
 bom = "3.0.3"
 coilCompose = "3.0.4"
+coreSplashscreen = "1.2.0-alpha02"
 datastorePreferences = "1.1.1"
 hiltAndroid = "2.51.1"
 hiltAndroidCompiler = "2.51.1"
@@ -19,6 +20,7 @@ navigationCompose = "2.8.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
