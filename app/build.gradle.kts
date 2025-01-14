@@ -17,7 +17,7 @@ properties.load(FileInputStream(localProperties))
 
 android {
     namespace = "dev.sobhy.jameya"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "dev.sobhy.jameya"
