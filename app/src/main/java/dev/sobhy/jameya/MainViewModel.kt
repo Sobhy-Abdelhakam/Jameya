@@ -14,11 +14,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(dataStoreManager: DataStoreManager) : ViewModel() {
-    val startDestination = dataStoreManager.userId.map {userId ->
-        if (userId.isNullOrBlank()) NavigationItem.Login.route else NavigationItem.Home.route
-    }.stateIn(
+    val startDestination = dataStoreManager.userId.stateIn(
         scope = viewModelScope,
-        initialValue = runBlocking { dataStoreManager.userId.first() },
+        initialValue = runBlocking { dataStoreManager.userId.first() }, // The application may be doing too much work on its main thread.
         started = SharingStarted.Eagerly
     )
 }

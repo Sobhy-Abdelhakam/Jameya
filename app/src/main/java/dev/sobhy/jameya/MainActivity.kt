@@ -11,6 +11,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.sobhy.jameya.navigation.AppNavHost
+import dev.sobhy.jameya.navigation.NavigationItem
 import dev.sobhy.jameya.ui.theme.JameyaTheme
 
 @AndroidEntryPoint
@@ -20,11 +21,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val startDestination by viewModel.startDestination.collectAsStateWithLifecycle()
+            val isLoggedIn by viewModel.startDestination.collectAsStateWithLifecycle()
+            val startDestination = when {
+                isLoggedIn.isNullOrBlank() -> NavigationItem.Login.route
+                else -> NavigationItem.Home.route
+            }
             val navController = rememberNavController()
             JameyaTheme {
                 Surface {
-                    AppNavHost(navController = navController, startDestination = startDestination!!)
+                    AppNavHost(navController = navController, startDestination = startDestination)
                 }
             }
         }
