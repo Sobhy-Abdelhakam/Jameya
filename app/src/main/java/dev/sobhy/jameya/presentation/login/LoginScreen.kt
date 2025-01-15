@@ -59,6 +59,7 @@ fun LoginScreen(
                 onWrongNumberClicked = { viewModel.handleEvent(LoginEvent.NavigateToPhoneNumber) },
                 onRetry = { viewModel.handleEvent(LoginEvent.ResendOtp) },
                 onVerifyOtp = { viewModel.handleEvent(LoginEvent.VerifyOtp) },
+                remainingTime = uiState.remainingTime
             )
             if (showConfirmDialog) {
                 ConfirmPhoneNumberDialog(

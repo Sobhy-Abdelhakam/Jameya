@@ -11,5 +11,6 @@ data class LoginUiState(
     val otp: String = "",
     val isLoading: Boolean = false,
     val error: String? = null,
-    val isSuccess: Boolean = false
+    val isSuccess: Boolean = false,
+    val remainingTime: Int = 0
 )

@@ -21,6 +21,7 @@ fun LoginScreenContent(
     onWrongNumberClicked: () -> Unit,
     onRetry: () -> Unit,
     onVerifyOtp: () -> Unit,
+    remainingTime: Int
 ) {
     val screenTitle = remember(currentContent) {
         if (currentContent is ScreenContent.PhoneNumber) "Enter your phone number" else "Verify your number"
@@ -48,7 +49,8 @@ fun LoginScreenContent(
                 onOtpChange = onOTPChanged,
                 onSubmit = onVerifyOtp,
                 onWrongNumber = onWrongNumberClicked,
-                onRetry = onRetry
+                onRetry = onRetry,
+                remainingTime= remainingTime
             )
         }
     }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -18,7 +19,8 @@ fun OtpContent(
     onOtpChange: (String) -> Unit,
     onSubmit: () -> Unit,
     onWrongNumber: () -> Unit,
-    onRetry: () -> Unit
+    onRetry: () -> Unit,
+    remainingTime: Int
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -31,8 +33,12 @@ fun OtpContent(
         Button(onClick = onSubmit, modifier = Modifier.fillMaxWidth()) {
             Text("Verify OTP")
         }
-        TextButton(onClick = onRetry) {
-            Text("Didn't receive OTP?")
+        if (remainingTime > 0) {
+            Text("Resend OTP in: ${remainingTime}s")
+        } else {
+            TextButton(onClick = onRetry) {
+                Text("Didn't receive OTP?")
+            }
         }
 
     }

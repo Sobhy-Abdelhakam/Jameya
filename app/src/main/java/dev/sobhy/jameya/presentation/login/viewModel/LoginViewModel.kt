@@ -1,13 +1,13 @@
 package dev.sobhy.jameya.presentation.login.viewModel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.sobhy.jameya.domain.usecase.SendOtpUseCase
 import dev.sobhy.jameya.domain.usecase.VerifyOtpUseCase
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -21,6 +21,7 @@ class LoginViewModel @Inject constructor(
 ): ViewModel() {
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState
+    private var countdownJob: Job? = null
 
     fun handleEvent(event: LoginEvent){
         when(event){
@@ -33,10 +34,6 @@ class LoginViewModel @Inject constructor(
             LoginEvent.ResendOtp -> sendOtp()
         }
     }
-    var phoneNumber: String by mutableStateOf("")
-        private set
-    var otp: String by mutableStateOf("")
-        private set
 
     private fun updatePhoneNumber(newNumber: String) {
         _uiState.update { it.copy(phoneNumber = newNumber) }
@@ -51,7 +48,9 @@ class LoginViewModel @Inject constructor(
             val result = sendOtpUseCase("+20${uiState.value.phoneNumber}")
             _uiState.update {
                 if (result.isSuccess) {
-                    it.copy(isLoading = false, error = null, currentContent = ScreenContent.Otp)
+                    it.copy(isLoading = false, error = null, currentContent = ScreenContent.Otp).apply {
+                        startCountdown()
+                    }
                 } else {
                     it.copy(isLoading = false, error = result.exceptionOrNull()?.message ?: "Failed to send OTP")
                 }
@@ -79,6 +78,16 @@ class LoginViewModel @Inject constructor(
     }
     private fun dismissErrorDialog() {
         _uiState.update { it.copy(error = null) }
+    }
+    private fun startCountdown() {
+        countdownJob?.cancel()
+        countdownJob = viewModelScope.launch {
+            for (time in 59 downTo 0) {
+                delay(1000L)
+                _uiState.update { it.copy(remainingTime = time) }
+                Log.d("Counter", time.toString())
+            }
+        }
     }
 }
 
