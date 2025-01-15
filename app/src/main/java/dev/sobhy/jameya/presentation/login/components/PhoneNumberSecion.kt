@@ -30,7 +30,7 @@ fun PhoneNumberWithCounterCodeTextField(
             onValueChange = {},
             enabled = false,
             modifier = Modifier
-                .weight(0.6f)
+                .weight(0.7f)
                 .padding(end = 8.dp),
             colors = TextFieldDefaults.colors(
                 disabledTextColor = Color.Black,
