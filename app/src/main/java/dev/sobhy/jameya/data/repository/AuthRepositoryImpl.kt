@@ -1,4 +1,4 @@
-package dev.sobhy.jameya.data.login
+package dev.sobhy.jameya.data.repository
 
 import dev.sobhy.jameya.data.datastore.DataStoreManager
 import dev.sobhy.jameya.domain.repository.AuthRepository
@@ -13,7 +13,7 @@ class AuthRepositoryImpl @Inject constructor(
     private val dataStoreManager: DataStoreManager
 ): AuthRepository {
     override suspend fun sendOtp(phoneNumber: String): Result<Unit> {
-        return kotlin.runCatching {
+        return runCatching {
             supabase.auth.signInWith(OTP){
                 this.phone = phoneNumber
             }
@@ -21,7 +21,7 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun verifyOtp(phoneNumber: String, otp: String): Result<Unit> {
-        return kotlin.runCatching {
+        return runCatching {
             supabase.auth.verifyPhoneOtp(
                 type = OtpType.Phone.SMS,
                 phone = phoneNumber,
