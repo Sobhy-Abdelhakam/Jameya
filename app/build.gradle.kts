@@ -84,6 +84,7 @@ dependencies {
     // Supabase
     implementation(platform(libs.bom))
     implementation(libs.postgrest.kt)
+    implementation(libs.storage.kt)
     implementation(libs.ktor.client.android)
     // coil
     implementation(libs.coil.compose)
