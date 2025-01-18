@@ -12,10 +12,18 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.sobhy.jameya.presentation.profile.components.ProfileScreenContent
+import dev.sobhy.jameya.ui.compnents.ErrorDialog
+import dev.sobhy.jameya.ui.compnents.LoadingDialog
 
 @Composable
-fun ProfileScreen(modifier: Modifier = Modifier) {
+fun ProfileScreen(
+    modifier: Modifier = Modifier,
+    viewModel: ProfileViewModel = hiltViewModel(),
+) {
+    val state = viewModel.state.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -28,7 +36,15 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                 }
             )
         }
-    ) {
-        ProfileScreenContent(modifier = Modifier.padding(it))
+    ) { paddingValue ->
+        state.value.user?.let {
+            ProfileScreenContent(user = it, modifier = Modifier.padding(paddingValue))
+        }
+        state.value.error?.let {
+            ErrorDialog(it) { }
+        }
+        if (state.value.isLoading){
+            LoadingDialog()
+        }
     }
 }

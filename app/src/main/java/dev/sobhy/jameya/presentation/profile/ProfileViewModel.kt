@@ -13,9 +13,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel(
+class ProfileViewModel @Inject constructor(
     private val getUserUseCase: GetUserUseCase,
     private val updateNameUseCase: UpdateNameUseCase,
     private val updateImageUseCase: UpdateImageUseCase
