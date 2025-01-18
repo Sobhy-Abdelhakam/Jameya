@@ -1,6 +1,7 @@
 package dev.sobhy.jameya.data.repository
 
 import coil3.network.HttpException
+import dev.sobhy.jameya.BuildConfig
 import dev.sobhy.jameya.core.response.ApiResource
 import dev.sobhy.jameya.data.datastore.DataStoreManager
 import dev.sobhy.jameya.data.dto.UserDto
@@ -19,7 +20,6 @@ class ProfileRepositoryImpl @Inject constructor(
     private val postgrest: Postgrest,
     private val storage: Storage,
     private val dataStoreManager: DataStoreManager,
-    private val supabaseUrl: String,
 ) : ProfileRepository {
     companion object {
         private const val USERS_TABLE = "users"
@@ -77,7 +77,7 @@ class ProfileRepositoryImpl @Inject constructor(
     }
 
     private fun buildImageUrl(imageFileName: String) =
-        "$supabaseUrl/storage/v1/object/public/$USERS_BUCKET/$imageFileName"
+        "${BuildConfig.SUPABASE_URL}/storage/v1/object/public/$USERS_BUCKET/$imageFileName"
 
     /**
      * Handles exceptions and emits an appropriate [ApiResource.Error].
