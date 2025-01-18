@@ -16,19 +16,19 @@ import dev.sobhy.jameya.domain.model.User
 
 @Composable
 fun ProfileScreenContent(
-    user: User,
+    user: User?,
     modifier: Modifier = Modifier
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
     Column(modifier = modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
         ProfileImageWithEditIcon(
-            imageUrl = user.image,
+            imageUrl = user?.image,
             editIconClick = { showBottomSheet = true }
         )
         if (showBottomSheet){
             ChangeImageBottomSheet(dismissBottomSheet = { showBottomSheet = false }, imageUrl = null, imageChanged = {})
         }
-        InformationRow(icon = Icons.Outlined.Person, title = "Name", value = user.name)
+        InformationRow(icon = Icons.Outlined.Person, title = "Name", value = user?.name ?: "null")
     }
 }
 

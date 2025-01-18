@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -41,6 +42,10 @@ class ProfileViewModel @Inject constructor(
                     }
                 }
         }
+    }
+
+    fun dismissErrorDialog(){
+        _state.update { it.copy(error = null) }
     }
 }
 

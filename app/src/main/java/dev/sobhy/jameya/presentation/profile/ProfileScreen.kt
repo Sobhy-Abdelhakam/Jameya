@@ -37,11 +37,9 @@ fun ProfileScreen(
             )
         }
     ) { paddingValue ->
-        state.value.user?.let {
-            ProfileScreenContent(user = it, modifier = Modifier.padding(paddingValue))
-        }
+            ProfileScreenContent(user = state.value.user, modifier = Modifier.padding(paddingValue))
         state.value.error?.let {
-            ErrorDialog(it) { }
+            ErrorDialog(it) { viewModel.dismissErrorDialog()}
         }
         if (state.value.isLoading){
             LoadingDialog()
