@@ -37,11 +37,9 @@ class ProfileRepositoryImpl @Inject constructor(
             return@flow
         }
         val response = runCatching {
-            postgrest.from(USERS_TABLE).select {
-                filter {
-                    eq(ID_COLUMN, userId)
-                }
-            }.decodeSingleOrNull<UserDto>()
+            postgrest.from(USERS_TABLE)
+                .select { filter { eq(ID_COLUMN, userId) } }
+                .decodeSingleOrNull<UserDto>()
         }.getOrNull()
         if (response == null) {
             emit(ApiResource.Error(false, null, "Failed to fetch user data"))
@@ -67,8 +65,15 @@ class ProfileRepositoryImpl @Inject constructor(
     }
 
     private suspend fun updateUserData(column: String, value: Any) {
-        postgrest.from(USERS_TABLE).update ({ set(column, value) })
+        val userId = dataStoreManager.userId.firstOrNull()
+        if (userId.isNullOrBlank()) throw IllegalStateException("User ID is missing")
+
+        postgrest.from(USERS_TABLE).update(
+            update = { set(column, value) },
+            request = { filter { eq(ID_COLUMN, userId) } }
+        )
     }
+
     private suspend fun uploadImage(fileName: String, image: ByteArray): String {
         return storage.from(USERS_BUCKET).upload(
             path = fileName,
