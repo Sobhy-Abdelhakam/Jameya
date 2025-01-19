@@ -3,18 +3,19 @@ package dev.sobhy.jameya.data.repository
 import dev.sobhy.jameya.data.datastore.DataStoreManager
 import dev.sobhy.jameya.domain.repository.AuthRepository
 import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.auth.OtpType
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.OTP
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
-    private val supabase: SupabaseClient,
+    private val auth: Auth,
     private val dataStoreManager: DataStoreManager
 ): AuthRepository {
     override suspend fun sendOtp(phoneNumber: String): Result<Unit> {
         return runCatching {
-            supabase.auth.signInWith(OTP){
+            auth.signInWith(OTP){
                 this.phone = phoneNumber
             }
         }.mapCatching { }
@@ -22,12 +23,12 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun verifyOtp(phoneNumber: String, otp: String): Result<Unit> {
         return runCatching {
-            supabase.auth.verifyPhoneOtp(
+            auth.verifyPhoneOtp(
                 type = OtpType.Phone.SMS,
                 phone = phoneNumber,
                 token = otp
             )
-            val userId = supabase.auth.currentUserOrNull()?.id ?: throw Exception("User ID not found")
+            val userId = auth.currentUserOrNull()?.id ?: throw Exception("User ID not found")
             dataStoreManager.setUserId(userId)
             Result.success(Unit)
         }.getOrElse {
