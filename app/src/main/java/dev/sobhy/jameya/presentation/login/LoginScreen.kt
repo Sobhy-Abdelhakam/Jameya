@@ -76,8 +76,8 @@ fun LoginScreen(
                     viewModel.handleEvent(LoginEvent.DismissErrorDialog)
                 }
             }
-            if (uiState.isSuccess) {
-                LaunchedEffect(Unit) {
+            LaunchedEffect(uiState.isSuccess) {
+                if (uiState.isSuccess) {
                     navController.navigate(NavigationItem.Home.route) {
                         popUpTo(NavigationItem.Login.route) { inclusive = true }
                     }
