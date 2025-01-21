@@ -1,5 +1,6 @@
 package dev.sobhy.jameya.presentation.profile
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,8 +12,6 @@ import dev.sobhy.jameya.domain.usecase.UpdateNameUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,7 +21,7 @@ class ProfileViewModel @Inject constructor(
     private val updateNameUseCase: UpdateNameUseCase,
     private val updateImageUseCase: UpdateImageUseCase
 ): ViewModel(){
-    private val _state = MutableStateFlow(ProfileState())
+    private val _state = MutableStateFlow<ProfileState>(ProfileState.Loading)
     val state: StateFlow<ProfileState> get() = _state
 
     init {
@@ -32,25 +31,21 @@ class ProfileViewModel @Inject constructor(
     fun fetchUser() {
         viewModelScope.launch {
             getUserUseCase.execute()
-                .onStart { _state.value = ProfileState(isLoading = true) }
-                .catch { _state.value = ProfileState(error = it.message) }
+                .catch { _state.value = ProfileState.Error(it.message) }
                 .collect {
+                    Log.d("responseState", it.toString())
                     when(it){
-                        is ApiResource.Error -> _state.value = ProfileState(error = it.errorBody)
-                        ApiResource.Loading -> _state.value = ProfileState(isLoading = true)
-                        is ApiResource.Success -> _state.value = ProfileState(user = it.data)
+                        is ApiResource.Error -> _state.value = ProfileState.Error(it.errorBody)
+                        ApiResource.Loading -> _state.value = ProfileState.Loading
+                        is ApiResource.Success -> _state.value = ProfileState.Success(it.data)
                     }
                 }
         }
     }
-
-    fun dismissErrorDialog(){
-        _state.update { it.copy(error = null) }
-    }
 }
 
-data class ProfileState(
-    val user: User? = null,
-    val isLoading: Boolean = false,
-    val error: String? = null
-)
+sealed class ProfileState {
+    data class Success(val user: User?): ProfileState()
+    data class Error(val message: String?): ProfileState()
+    object Loading: ProfileState()
+}
