@@ -10,9 +10,9 @@ data class UserDto(
     @SerialName("phone_number")
     val phoneNumber: String,
     @SerialName("full_name")
-    val fullName: String,
-    @SerialName("image")
-    val image: String,
+    val fullName: String?,
+    @SerialName("Image")
+    val image: String?,
     @SerialName("created_at")
     val createdAt: String,
     @SerialName("updated_at")
