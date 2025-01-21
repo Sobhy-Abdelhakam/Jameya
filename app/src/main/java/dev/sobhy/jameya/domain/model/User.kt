@@ -1,6 +1,7 @@
 package dev.sobhy.jameya.domain.model
 
-import kotlinx.datetime.LocalDate
+import java.time.LocalDate
+
 
 data class User(
     val id: String,
