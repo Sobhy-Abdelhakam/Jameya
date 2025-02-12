@@ -3,6 +3,9 @@
 package dev.sobhy.jameya.presentation.profile.components
 
 import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,7 +22,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,57 +32,34 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ChangeImageBottomSheet(
     dismissBottomSheet: () -> Unit,
-    imageUrl: String?,
+    enableDeleteIcon: Boolean,
     imageChanged: (Uri?) -> Unit,
 ) {
-        ModalBottomSheet(
-            onDismissRequest = dismissBottomSheet,
-        ) {
-            Text(
-                text = "Profile photo",
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(16.dp),
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround,
-            ) {
-                Column(
-                    modifier = Modifier.padding(4.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    IconButton(
-                        onClick = {
-//                            galleryLauncher.launch("image/*")
-                            dismissBottomSheet()
-                        },
-                        modifier =
-                        Modifier
-                            .size(70.dp)
-                            .border(
-                                width = 1.dp,
-                                color = Color.Gray,
-                                shape = CircleShape,
-                            ),
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Image,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                    }
-                    Text(text = "Gallery", modifier = Modifier.padding(8.dp))
+    val galleryLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.GetContent(),
+            onResult = {
+                Log.d("bottomSheet", it?.path.toString())
+                it?.let {
+                    imageChanged(it)
                 }
-                Column(
-                    modifier = Modifier.padding(4.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    IconButton(
-                        onClick = {
-                            imageChanged(null)
-                            dismissBottomSheet()
-                        },
-                        modifier =
+            },
+        )
+    UpdateInfoBottomSheet(dismissBottomSheet = dismissBottomSheet, title = "Profile photo") {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround,
+        ) {
+            Column(
+                modifier = Modifier.padding(4.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                IconButton(
+                    onClick = {
+                        galleryLauncher.launch("image/*")
+//                        dismissBottomSheet()
+                    },
+                    modifier =
                         Modifier
                             .size(70.dp)
                             .border(
@@ -88,27 +67,52 @@ fun ChangeImageBottomSheet(
                                 color = Color.Gray,
                                 shape = CircleShape,
                             ),
-                        colors =
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Image,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
+                }
+                Text(text = "Gallery", modifier = Modifier.padding(8.dp))
+            }
+            Column(
+                modifier = Modifier.padding(4.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                IconButton(
+                    onClick = {
+                        imageChanged(null)
+                        dismissBottomSheet()
+                    },
+                    modifier =
+                        Modifier
+                            .size(70.dp)
+                            .border(
+                                width = 1.dp,
+                                color = Color.Gray,
+                                shape = CircleShape,
+                            ),
+                    colors =
                         IconButtonDefaults.iconButtonColors(
                             containerColor = MaterialTheme.colorScheme.errorContainer,
                             contentColor = MaterialTheme.colorScheme.error,
                             disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                             disabledContentColor = MaterialTheme.colorScheme.secondary,
                         ),
-                        enabled = imageUrl != null,
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = null,
-                        )
-                    }
-                    Text(
-                        text = "Delete",
-                        modifier = Modifier.padding(8.dp),
-                        color = MaterialTheme.colorScheme.error,
+                    enabled = enableDeleteIcon,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = null,
                     )
                 }
+                Text(
+                    text = "Delete",
+                    modifier = Modifier.padding(8.dp),
+                    color = MaterialTheme.colorScheme.error,
+                )
             }
         }
-
+    }
 }
