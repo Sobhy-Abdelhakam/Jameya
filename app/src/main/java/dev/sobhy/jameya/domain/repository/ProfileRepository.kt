@@ -6,6 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface ProfileRepository {
     fun getUser(): Flow<ApiResource<User>>
-    suspend fun updateImage(image: ByteArray): ApiResource<Unit>
+    suspend fun updateImage(imageName: String, image: ByteArray?): ApiResource<Unit>
     suspend fun updateName(name: String): ApiResource<Unit>
 }

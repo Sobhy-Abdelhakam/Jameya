@@ -1,44 +1,45 @@
 package dev.sobhy.jameya.data.repository
 
+import android.util.Log
 import coil3.network.HttpException
 import dev.sobhy.jameya.BuildConfig
 import dev.sobhy.jameya.core.response.ApiResource
-import dev.sobhy.jameya.data.datastore.DataStoreManager
 import dev.sobhy.jameya.data.dto.UserDto
 import dev.sobhy.jameya.data.mappers.toDomain
 import dev.sobhy.jameya.domain.model.User
 import dev.sobhy.jameya.domain.repository.ProfileRepository
+import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.storage.Storage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
+import kotlinx.io.IOException
 import javax.inject.Inject
 
 class ProfileRepositoryImpl @Inject constructor(
+    private val auth: Auth,
     private val postgrest: Postgrest,
     private val storage: Storage,
-    private val dataStoreManager: DataStoreManager,
 ) : ProfileRepository {
     companion object {
-        private const val USERS_TABLE = "users"
-        private const val USERS_BUCKET = "Users"
-        private const val IMAGE_COLUMN = "Image"
+        private const val USERS_TABLE = "profiles"
+        private const val USERS_BUCKET = "users"
+        private const val IMAGE_COLUMN = "image_url"
         private const val NAME_COLUMN = "full_name"
-        private const val ID_COLUMN = "id"
     }
 
     override fun getUser(): Flow<ApiResource<User>> = flow {
         emit(ApiResource.Loading)
-        val userId = dataStoreManager.userId.firstOrNull()
-        if (userId.isNullOrBlank()) {
-            emit(ApiResource.Error(false, null, "UserNotFound"))
-            return@flow
-        }
+        val user = auth.currentUserOrNull()?.id
+        Log.d("userId", user.toString())
         val response = runCatching {
             postgrest.from(USERS_TABLE)
-                .select { filter { eq(ID_COLUMN, userId) } }
+                .select(){
+                    filter { {
+                        eq("id", user!!)
+                    } }
+                }
                 .decodeSingleOrNull<UserDto>()
         }.getOrNull()
         if (response == null) {
@@ -48,10 +49,15 @@ class ProfileRepositoryImpl @Inject constructor(
         emit(ApiResource.Success(response.toDomain()))
     }.catch { handleThrowable(it) }
 
-    override suspend fun updateImage(image: ByteArray): ApiResource<Unit> {
+    override suspend fun updateImage(imageName: String, image: ByteArray?): ApiResource<Unit> {
         return runCatching {
-            val imageFileName = "profile_${System.currentTimeMillis()}.png"
-            val imageUrl = uploadImage(imageFileName, image)
+            if (image == null){
+                updateUserData(IMAGE_COLUMN, null)
+                ApiResource.Success(Unit)
+            }
+            val imageFileName = "profile_$imageName.png"
+            val imageUrl = uploadImage(imageFileName, image!!)
+            Log.d("repo", "Image upload successfully")
             updateUserData(IMAGE_COLUMN, buildImageUrl(imageUrl))
             ApiResource.Success(Unit)
         }.getOrElse { handleThrowable(it) }
@@ -64,14 +70,16 @@ class ProfileRepositoryImpl @Inject constructor(
         }.getOrElse { handleThrowable(it) }
     }
 
-    private suspend fun updateUserData(column: String, value: Any) {
-        val userId = dataStoreManager.userId.firstOrNull()
-        if (userId.isNullOrBlank()) throw IllegalStateException("User ID is missing")
+    private suspend fun updateUserData(column: String, value: String?) {
+        try {
+            val response = auth.updateUser {
+                data(mapOf(column to value)) // Correct way to update metadata
+            }
+            Log.d("name", response.userMetadata?.get("full_name").toString())
+        } catch (e: Exception) {
+            Log.e("updateUserData", "Error updating user data ${e.message}")
+        }
 
-        postgrest.from(USERS_TABLE).update(
-            update = { set(column, value) },
-            request = { filter { eq(ID_COLUMN, userId) } }
-        )
     }
 
     private suspend fun uploadImage(fileName: String, image: ByteArray): String {
@@ -88,11 +96,22 @@ class ProfileRepositoryImpl @Inject constructor(
      * Handles exceptions and emits an appropriate [ApiResource.Error].
      */
     private fun handleThrowable(throwable: Throwable): ApiResource<Unit> {
-        val isNetworkError = throwable is HttpException
-        return ApiResource.Error(
-            isNetworkError = isNetworkError,
-            errorCode = (throwable as? HttpException)?.response?.code, // null if not network error
-            errorBody = throwable.message
-        )
+        return when (throwable) {
+            is HttpException -> ApiResource.Error(
+                isNetworkError = true,
+                errorCode = throwable.response.code,
+                errorBody = throwable.message
+            )
+            is IOException -> ApiResource.Error(
+                isNetworkError = true,
+                errorCode = null,
+                errorBody = "Network connection error"
+            )
+            else -> ApiResource.Error(
+                isNetworkError = false,
+                errorCode = null,
+                errorBody = throwable.localizedMessage ?: "Unexpected error"
+            )
+        }
     }
 }

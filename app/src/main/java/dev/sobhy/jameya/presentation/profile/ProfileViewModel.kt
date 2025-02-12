@@ -1,23 +1,25 @@
 package dev.sobhy.jameya.presentation.profile
 
+import android.content.ContentResolver
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.sobhy.jameya.core.response.ApiResource
 import dev.sobhy.jameya.domain.model.User
-import dev.sobhy.jameya.domain.usecase.GetUserUseCase
+import dev.sobhy.jameya.domain.usecase.RetrieveUserUseCase
 import dev.sobhy.jameya.domain.usecase.UpdateImageUseCase
 import dev.sobhy.jameya.domain.usecase.UpdateNameUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val getUserUseCase: GetUserUseCase,
+    private val retrieveUserUseCase: RetrieveUserUseCase,
     private val updateNameUseCase: UpdateNameUseCase,
     private val updateImageUseCase: UpdateImageUseCase
 ): ViewModel(){
@@ -30,18 +32,60 @@ class ProfileViewModel @Inject constructor(
 
     fun fetchUser() {
         viewModelScope.launch {
-            getUserUseCase.execute()
-                .catch { _state.value = ProfileState.Error(it.message) }
-                .collect {
-                    Log.d("responseState", it.toString())
-                    when(it){
-                        is ApiResource.Error -> _state.value = ProfileState.Error(it.errorBody)
-                        ApiResource.Loading -> _state.value = ProfileState.Loading
-                        is ApiResource.Success -> _state.value = ProfileState.Success(it.data)
-                    }
-                }
+            try {
+                val user = retrieveUserUseCase()
+                _state.value = ProfileState.Success(user)
+            } catch (e: Exception){
+                _state.value = ProfileState.Error(e.message)
+            }
+//            getUserUseCase.execute()
+//                .catch { _state.value = ProfileState.Error(it.message) }
+//                .collect {
+//                    Log.d("responseState", it.toString())
+//                    when(it){
+//                        is ApiResource.Error -> _state.value = ProfileState.Error(it.errorBody)
+//                        ApiResource.Loading -> _state.value = ProfileState.Loading
+//                        is ApiResource.Success -> _state.value = ProfileState.Success(it.data)
+//                    }
+//                }
         }
     }
+    fun uploadImage(imageName: String, contentResolver: ContentResolver, image: Uri?){
+        viewModelScope.launch {
+            updateImageUseCase.execute(imageName, uriToByteArray(contentResolver, image))
+        }
+    }
+    fun uploadName(name: String){
+        viewModelScope.launch {
+            Log.d("viewModel", "update name $name")
+            updateNameUseCase.execute(name)
+        }
+    }
+
+    private fun getBytes(inputStream: InputStream): ByteArray {
+        val byteBuffer = ByteArrayOutputStream()
+        val bufferSize = 1024
+        val buffer = ByteArray(bufferSize)
+        var len = 0
+        while (inputStream.read(buffer).also { len = it } != -1) {
+            byteBuffer.write(buffer, 0, len)
+        }
+        return byteBuffer.toByteArray()
+    }
+    private fun uriToByteArray(contentResolver: ContentResolver, uri: Uri?): ByteArray? {
+        if (uri == null){
+            return null
+        }
+        if (uri == Uri.EMPTY) {
+            return byteArrayOf()
+        }
+        val inputStream = contentResolver.openInputStream(uri)
+        if (inputStream != null) {
+            return getBytes(inputStream)
+        }
+        return byteArrayOf()
+    }
+
 }
 
 sealed class ProfileState {
