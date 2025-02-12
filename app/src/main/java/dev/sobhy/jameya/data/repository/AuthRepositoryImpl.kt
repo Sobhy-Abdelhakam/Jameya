@@ -1,6 +1,10 @@
 package dev.sobhy.jameya.data.repository
 
+import android.util.Log
 import dev.sobhy.jameya.data.datastore.DataStoreManager
+import dev.sobhy.jameya.data.dto.UserDto
+import dev.sobhy.jameya.data.mappers.toDomain
+import dev.sobhy.jameya.domain.model.User
 import dev.sobhy.jameya.domain.repository.AuthRepository
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.auth.OtpType
@@ -38,11 +42,23 @@ class AuthRepositoryImpl @Inject constructor(
         return dataStoreManager.token.firstOrNull() != null
     }
 
-    override suspend fun retrieveUser() {
+    override suspend fun retrieveUser(): User? {
         val token = dataStoreManager.token.firstOrNull()
+        var user: UserDto? = null
         token?.let {
-            auth.retrieveUser(it)
+            auth.retrieveUser(it).let {
+                user = UserDto(
+                    id = it.id,
+                    fullName = it.userMetadata?.get("full_name").toString(),
+                    image = it.userMetadata?.get("image_url").toString(),
+                    phoneNumber = it.phone!!,
+                    createdAt = it.createdAt.toString(),
+                    updatedAt = it.updatedAt.toString()
+                )
+                Log.d("user", "User: $user")
+            }
         }
+        return user?.toDomain()
     }
 
     override suspend fun refreshSession() {
